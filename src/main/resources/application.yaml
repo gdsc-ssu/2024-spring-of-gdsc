@@ -1,0 +1,25 @@
+spring:
+  # H2 Database ??
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: 'jdbc:h2:mem:test'   # H2 DB ?? ?? (In-Memory Mode)
+    # url: 'jdbc:h2:~/test'   # H2 DB ?? ?? (Embedded Mode)
+    username: root              # H2 DB ?? ID
+    password: 1234              # H2 DB ?? PW
+
+  # H2 Console ??
+  h2:
+    console: # H2 DB? ??? ??? ? ?? ??
+      enabled: true           # H2 Console ?? ??
+      path: /h2-console       # H2 Console ?? ??
+
+  # JPA ??
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create        # DB ??? ?? (none, create, create-drop, update, validate)
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true      # ?? ?? ?? (??)
+        show_sql: true        # ?? ?? ??
