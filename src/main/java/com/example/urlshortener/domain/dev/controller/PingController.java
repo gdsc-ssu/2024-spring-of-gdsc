@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/dev")
-@Tag(name = "🖥️ 개발 전용 API", description = "개발 전용 API")
+@Tag(name = "🖥️ 개발 전용", description = "개발 전용 API")
 public class PingController {
     @Operation(
         summary = "Ping 테스트",

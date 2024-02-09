@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/short-links")
-@Tag(name = "🔗URL 단축기", description = "URL 단축기 API")
+@Tag(name = "🔗 URL 단축기", description = "URL 단축기 API")
 public class UrlController {
 
     private final UrlService urlService;
