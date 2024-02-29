@@ -7,7 +7,7 @@ assignees: HwanGonJang
 
 ---
 
-### [1주차] OT
+### [n주차/1] 제목입니다.
 #### 담장자
 @HwanGonJang
 #### 날짜
