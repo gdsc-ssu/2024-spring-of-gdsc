@@ -8,7 +8,7 @@
 
 ## Check List
 
-- [ ]  PR 제목을 커밋 규칙에 맞게 작성
+- [ ]  PR 제목을 커밋 규칙에 맞게 작성 : [n주차/이름]{Feat, Fix, Docs, Style, Refactor, Test, Chore}/제목
 - [ ]  PR에 해당되는 Issue를 연결 완료
 - [ ]  적절한 라벨 설정
 - [ ]  작업한 사람 모두를 Assign
