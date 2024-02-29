@@ -2,24 +2,24 @@ spring:
   # H2 Database ??
   datasource:
     driver-class-name: org.h2.Driver
-    url: 'jdbc:h2:mem:test'   # H2 DB ?? ?? (In-Memory Mode)
-    # url: 'jdbc:h2:~/test'   # H2 DB ?? ?? (Embedded Mode)
-    username: root              # H2 DB ?? ID
-    password: 1234              # H2 DB ?? PW
+    url: 'jdbc:h2:mem:test'     # H2 DB (In-Memory Mode)
+    # url: 'jdbc:h2:~/test'     # H2 DB (Embedded Mode)
+    username: root              # H2 DB ID
+    password: 1234              # H2 DB PW
 
-  # H2 Console ??
+  # H2 Console
   h2:
-    console: # H2 DB? ??? ??? ? ?? ??
-      enabled: true           # H2 Console ?? ??
-      path: /h2-console       # H2 Console ?? ??
+    console:
+      enabled: true
+      path: /h2-console
 
-  # JPA ??
+  # JPA
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create        # DB ??? ?? (none, create, create-drop, update, validate)
+      ddl-auto: create        # (none, create, create-drop, update, validate)
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-        format_sql: true      # ?? ?? ?? (??)
-        show_sql: true        # ?? ?? ??
+        dialect: org.hibernate.dialect.H2Dialect    # Dialect: 데이터베이스에 대한 특정 SQL 문법과 데이터 타입 매핑에 대한 규칙을 제공
+        format_sql: true      # SQL 쿼리를 포맷팅하여 출력할지 여부 설정
+        show_sql: true        # SQL 쿼리를 출력할지 여부 설정

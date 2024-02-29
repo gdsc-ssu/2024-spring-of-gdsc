@@ -1,36 +1,46 @@
+// 자바 플러그인
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
 }
 
+// 프로젝트의 그룹(도메인) 및 버전
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
+// 자바 버전
 java {
     sourceCompatibility = '17'
 }
 
+// 의존성 라이브러리 레포지토리
 repositories {
     mavenCentral()
 }
 
+// 의존성 라이브러리
 dependencies {
+    // Spring Boot Staeter
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
+    // Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-common:2.0.4'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
 
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    // Database
     implementation 'com.h2database:h2'
 }
 
+// 테스트 의존성 라이브러리
 tasks.named('test') {
     useJUnitPlatform()
 }

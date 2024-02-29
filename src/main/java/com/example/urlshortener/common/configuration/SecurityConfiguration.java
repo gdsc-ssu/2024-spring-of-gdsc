@@ -26,6 +26,7 @@ public class SecurityConfiguration {
         http
             .authorizeHttpRequests(
                 authorize -> authorize
+                    // 현재는 모든 요청 허용
                     .requestMatchers("/dev/ping").permitAll()
                     .anyRequest().permitAll()
             );
