@@ -23,3 +23,18 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect    # Dialect: 데이터베이스에 대한 특정 SQL 문법과 데이터 타입 매핑에 대한 규칙을 제공
         format_sql: true      # SQL 쿼리를 포맷팅하여 출력할지 여부 설정
         show_sql: true        # SQL 쿼리를 출력할지 여부 설정
+
+logging:
+  pattern:
+    # 로깅 패턴 설정
+    console: "%clr(%d{dd-MM-yyyy HH:mm:ss.SSS}){yellow} %clr(${PID:- }){green} %magenta([%thread]) %highlight([%-5level]) %clr(%-40.40logger{39}){cyan} %msg%n"
+  level:
+    # 로깅 레벨 설정
+    root: info
+  file:
+    name: log/gdsc.log
+    path: /Users/gdsc/Documents/Java/SpringBoot/url-shortener/logs
+
+server:
+  # 서버 안전하게 종료하기
+  shutdown: graceful

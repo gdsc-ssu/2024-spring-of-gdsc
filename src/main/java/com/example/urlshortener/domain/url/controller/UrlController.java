@@ -1,10 +1,10 @@
 package com.example.urlshortener.domain.url.controller;
 
 import com.example.urlshortener.common.dto.Response;
-import com.example.urlshortener.domain.url.UrlService;
 import com.example.urlshortener.domain.url.controller.request.CreateShortUrlRequest;
 import com.example.urlshortener.domain.url.controller.response.ShortUrlResponse;
 import com.example.urlshortener.domain.url.dto.ShortenedUrlDto;
+import com.example.urlshortener.domain.url.service.UrlService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

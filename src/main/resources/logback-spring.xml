@@ -1,0 +1,25 @@
+<configuration>
+
+    <springProperty scope="context" name="applicationName" source="spring.application.name" defaultValue="url-shortener-logging"/>
+
+    <!-- 어펜더 설정 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern><![CDATA[
+                %yellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) %green(${PID:- }) %highlight([%-5level]) %magenta([%property{applicationName},%X{traceId},%X{spanId}]) %blue([%15.15t]) %cyan(%-40.40logger{39}) : %msg%n
+            ]]></pattern>
+        </encoder>
+    </appender>
+
+    <!-- 특정 프로필에서만 적용 -->
+    <springProfile name="local, dev, prod">
+        <!-- level: 로깅 레벨 or OFF로 로깅에서 제외하기 / additive: 부모 로거의 설정을 따라갈지 여부(기본값 true). -->
+        <logger name="com.example.urlshortener.UrlShortenerApplication" level="DEBUG" additive="true">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+</configuration>

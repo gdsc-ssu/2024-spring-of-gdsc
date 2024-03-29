@@ -1,4 +1,4 @@
-package com.example.urlshortener.domain.url;
+package com.example.urlshortener.domain.url.service;
 
 import com.example.urlshortener.common.utils.RandomStringUtil;
 import com.example.urlshortener.domain.url.dto.ShortenedUrlDto;
