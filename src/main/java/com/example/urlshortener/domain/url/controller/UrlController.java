@@ -8,6 +8,8 @@ import com.example.urlshortener.domain.url.service.UrlService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -28,7 +30,7 @@ public class UrlController {
         }
     )
     @PostMapping
-    public Response<ShortUrlResponse> createShortUrl(@RequestBody CreateShortUrlRequest request) {
+    public Response<ShortUrlResponse> createShortUrl(@Valid @RequestBody CreateShortUrlRequest request) {
         ShortenedUrlDto shortenedUrl = urlService.createShortUrl(request.getUrl());
         return Response.data(ShortUrlResponse.from(shortenedUrl));
     }
@@ -42,7 +44,7 @@ public class UrlController {
         }
     )
     @GetMapping("/{short_id}")
-    public Response<ShortUrlResponse> getShortUrl(@PathVariable("short_id") String shortId) {
+    public Response<ShortUrlResponse> getShortUrl(@NotBlank @PathVariable("short_id") String shortId) {
         ShortenedUrlDto shortenedUrl = urlService.getShortUrl(shortId);
         return Response.data(ShortUrlResponse.from(shortenedUrl));
     }
@@ -55,7 +57,7 @@ public class UrlController {
         }
     )
     @GetMapping("/r/{short_id}")
-    public RedirectView redirectShortUrl(@PathVariable("short_id") String shortId) {
+    public RedirectView redirectShortUrl(@NotBlank @PathVariable("short_id") String shortId) {
         String originUrl = urlService.getOriginUrl(shortId);
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(originUrl);
