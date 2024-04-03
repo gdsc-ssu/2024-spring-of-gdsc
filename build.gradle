@@ -38,6 +38,9 @@ dependencies {
 
     // Database
     implementation 'com.h2database:h2'
+
+    // Test
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 // 테스트 의존성 라이브러리
