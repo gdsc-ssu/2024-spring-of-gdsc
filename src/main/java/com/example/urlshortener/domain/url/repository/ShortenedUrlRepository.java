@@ -1,6 +1,7 @@
 package com.example.urlshortener.domain.url.repository;
 
 import com.example.urlshortener.domain.url.entity.ShortenedUrl;
+import com.example.urlshortener.domain.url.repository.interfaces.ShortUrlOnly;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,4 +32,6 @@ public interface ShortenedUrlRepository extends JpaRepository<ShortenedUrl, Long
     @Transactional
     @Query("UPDATE ShortenedUrl s SET s.originUrl = :originUrl WHERE s.shortUrl = :shortUrl")
     int updateOriginUrlByShortUrl(@Param("originUrl") String originUrl, @Param("shortUrl") String shortUrl);
+
+    Iterable<ShortUrlOnly> findShortenedUrlByOriginUrl(String originUrl);
 }
