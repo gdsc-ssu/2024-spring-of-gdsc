@@ -1,51 +1,46 @@
 package com.example.urlshortener.ch3;
 
-import com.example.urlshortener.domain.url.entity.ShortenedUrl;
-import com.example.urlshortener.domain.url.repository.ShortenedUrlRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// 3.3
+// 3.2
 @SpringBootTest
 class Ch3Test2 {
 
     @Autowired
-    private ShortenedUrlRepository shortenedUrlRepository;
+    private DataSource datasource;
 
+    // Datasource 확인
     @Test
-    public void givenCreateShortenedUrlWhenLoadTheShortenedUrlThenExpectSameShortenedUrl() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
-        ShortenedUrl savedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
-
-        // TODO: 실제로는 이렇게 사용하면 안됨 with Transactional
-        assertThat(shortenedUrlRepository.findById(savedShortenedUrl.getId()).get().getId()).isEqualTo(savedShortenedUrl.getId());
+    public void giveDatasourceAvailableWhenAccessDetailsThenExpectDetails() throws SQLException {
+        assertThat(datasource.getClass().getName()).isEqualTo("com.zaxxer.hikari.HikariDataSource");
+        assertThat(datasource.getConnection().getMetaData().getDatabaseProductName()).isEqualTo("H2");
     }
 
+    // sql.init.data-locations 가 data.sql로 설정되어야 함
     @Test
-    public void givenUpdateShortenedUrlWhenLoadTheShortenedUrlThenExpectUpdatedShortenedUrl() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
-        shortenedUrlRepository.save(shortenedUrl);
+    public void whenCountAllCoursesThenExpectFiveCourses() throws SQLException {
+        ResultSet rs = null;
+        int noOfShortenedUrls = 0;
 
-        shortenedUrl.setOriginUrl("http://example.com/page2");
-        // TODO: 영속성 컨텍스트 / 엔티티 생명주기 이야기
-        ShortenedUrl updatedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
-
-        assertThat(shortenedUrlRepository.findById(updatedShortenedUrl.getId()).get().getOriginUrl()).isEqualTo("http://example.com/page2");
-    }
-
-    @Test
-    public void givenDeleteShortenedUrlWhenLoadTheShortenedUrlThenExpectNoShortenedUrl() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
-        ShortenedUrl savedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
-
-        assertThat(shortenedUrlRepository.findById(savedShortenedUrl.getId()).get().getId()).isEqualTo(savedShortenedUrl.getId());
-
-        shortenedUrlRepository.delete(savedShortenedUrl);
-        assertThat(shortenedUrlRepository.findById(savedShortenedUrl.getId()).isPresent()).isFalse();
+        try(PreparedStatement ps = datasource.getConnection().prepareStatement("SELECT COUNT(1) FROM shortened_url")) {
+            rs = ps.executeQuery();
+            if(rs.next()) {
+                noOfShortenedUrls = rs.getInt(1);
+            }
+            assertThat(noOfShortenedUrls).isEqualTo(5);
+        } finally {
+            if(rs != null) {
+                rs.close();
+            }
+        }
     }
 }

@@ -2,20 +2,15 @@ package com.example.urlshortener.ch3;
 
 import com.example.urlshortener.domain.url.entity.ShortenedUrl;
 import com.example.urlshortener.domain.url.repository.ShortenedUrlRepository;
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// 3.4
+// 3.3
 @SpringBootTest
 class Ch3Test3 {
 
@@ -27,37 +22,30 @@ class Ch3Test3 {
         ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
         ShortenedUrl savedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
 
-        assertThat(shortenedUrlRepository.findByOriginUrl(savedShortenedUrl.getOriginUrl()).get().getId()).isEqualTo(savedShortenedUrl.getId());
-        assertThat(shortenedUrlRepository.existsByShortUrl(savedShortenedUrl.getShortUrl())).isTrue();
-        assertThat(shortenedUrlRepository.countByOriginUrl(savedShortenedUrl.getOriginUrl())).isEqualTo(1);
+        // TODO: 실제로는 이렇게 사용하면 안됨 with Transactional
+        assertThat(shortenedUrlRepository.findById(savedShortenedUrl.getId()).get().getId()).isEqualTo(savedShortenedUrl.getId());
     }
 
     @Test
-    public void givenDataAvailableWhenSortsFirstPageThenGetSortedData() {
-        saveMockedShortenedUrls();
+    public void givenUpdateShortenedUrlWhenLoadTheShortenedUrlThenExpectUpdatedShortenedUrl() {
+        ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
+        shortenedUrlRepository.save(shortenedUrl);
 
-        Pageable pageable = PageRequest.of(0, 3, Sort.by(Sort.Order.desc("shortUrl")));
+        shortenedUrl.setOriginUrl("http://example.com/page2");
+        // TODO: 영속성 컨텍스트 / 엔티티 생명주기 이야기
+        ShortenedUrl updatedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
 
-        Condition<ShortenedUrl> sortedFirstCourseCondition = new Condition<ShortenedUrl>() {
-            @Override
-            public boolean matches(ShortenedUrl shortenedUrl) {
-                return shortenedUrl.getId() == 5L && shortenedUrl.getShortUrl().equals("http://short.url/mno");
-            }
-        };
-
-        // short_url 역순 정렬 검증
-        assertThat(shortenedUrlRepository.findAll(pageable).getContent()).first().has(sortedFirstCourseCondition);
+        assertThat(shortenedUrlRepository.findById(updatedShortenedUrl.getId()).get().getOriginUrl()).isEqualTo("http://example.com/page2");
     }
 
-    private void saveMockedShortenedUrls() {
-        List<ShortenedUrl> shortenedUrls = List.of(
-                new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.parse("2024-04-01T10:00:00")),
-                new ShortenedUrl("http://short.url/def", "http://example.com/page2", LocalDateTime.parse("2024-04-02T12:00:00")),
-                new ShortenedUrl("http://short.url/ghi", "http://example.com/page3", LocalDateTime.parse("2024-04-03T14:00:00")),
-                new ShortenedUrl("http://short.url/jkl", "http://example.com/page4", LocalDateTime.parse("2024-04-04T16:00:00")),
-                new ShortenedUrl("http://short.url/mno", "http://example.com/page5", LocalDateTime.parse("2024-04-05T18:00:00"))
-        );
+    @Test
+    public void givenDeleteShortenedUrlWhenLoadTheShortenedUrlThenExpectNoShortenedUrl() {
+        ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
+        ShortenedUrl savedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
 
-        shortenedUrlRepository.saveAll(shortenedUrls);
+        assertThat(shortenedUrlRepository.findById(savedShortenedUrl.getId()).get().getId()).isEqualTo(savedShortenedUrl.getId());
+
+        shortenedUrlRepository.delete(savedShortenedUrl);
+        assertThat(shortenedUrlRepository.findById(savedShortenedUrl.getId()).isPresent()).isFalse();
     }
 }
