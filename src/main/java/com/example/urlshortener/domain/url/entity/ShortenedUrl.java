@@ -1,6 +1,7 @@
 package com.example.urlshortener.domain.url.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,9 +19,11 @@ public class ShortenedUrl {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(name = "short_url", length = 2048, nullable = false)
     private String shortUrl;
 
+    @NotBlank
     @Column(name = "origin_url", length = 2048, nullable = false)
     private String originUrl;
 

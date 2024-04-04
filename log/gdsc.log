@@ -1,0 +1,34 @@
+2024-03-29T15:16:32.593+09:00  INFO 28960 --- [main] c.e.u.UrlShortenerApplication            : Starting UrlShortenerApplication using Java 17.0.5 with PID 28960 (/Users/ggona/Documents/GitHub/study/url-shortener/out/production/classes started by ggona in /Users/ggona/Documents/GitHub/study/url-shortener)
+2024-03-29T15:16:32.594+09:00  INFO 28960 --- [main] c.e.u.UrlShortenerApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-03-29T15:16:33.125+09:00  INFO 28960 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-03-29T15:16:33.156+09:00  INFO 28960 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 26 ms. Found 1 JPA repository interface.
+2024-03-29T15:16:33.448+09:00  INFO 28960 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2024-03-29T15:16:33.455+09:00  INFO 28960 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-03-29T15:16:33.455+09:00  INFO 28960 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-03-29T15:16:33.486+09:00  INFO 28960 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-03-29T15:16:33.486+09:00  INFO 28960 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 870 ms
+2024-03-29T15:16:33.502+09:00  INFO 28960 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-03-29T15:16:33.602+09:00  INFO 28960 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:test user=ROOT
+2024-03-29T15:16:33.603+09:00  INFO 28960 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-03-29T15:16:33.609+09:00  INFO 28960 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:test'
+2024-03-29T15:16:33.689+09:00  INFO 28960 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-03-29T15:16:33.724+09:00  INFO 28960 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.1.Final
+2024-03-29T15:16:33.744+09:00  INFO 28960 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-03-29T15:16:33.898+09:00  INFO 28960 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-03-29T15:16:33.933+09:00  WARN 28960 --- [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-03-29T15:16:34.402+09:00  INFO 28960 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-03-29T15:16:34.418+09:00  INFO 28960 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-03-29T15:16:34.668+09:00  WARN 28960 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-03-29T15:16:34.679+09:00  WARN 28960 --- [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: dbe432b6-ca1f-485c-bd30-b883d805f6df
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2024-03-29T15:16:35.088+09:00  INFO 28960 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7842260f, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7cb4d4ee, org.springframework.security.web.context.SecurityContextHolderFilter@34dda1b4, org.springframework.security.web.header.HeaderWriterFilter@3c4231e5, org.springframework.web.filter.CorsFilter@44ec6637, org.springframework.security.web.authentication.logout.LogoutFilter@701c413, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5cb4ba80, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@978475b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5a0b550a, org.springframework.security.web.access.ExceptionTranslationFilter@5ae22651, org.springframework.security.web.access.intercept.AuthorizationFilter@7a085d02]
+2024-03-29T15:16:35.261+09:00  INFO 28960 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2024-03-29T15:16:35.271+09:00  INFO 28960 --- [main] c.e.u.UrlShortenerApplication            : Started UrlShortenerApplication in 2.956 seconds (process running for 3.495)
+2024-03-29T15:16:35.274+09:00  INFO 28960 --- [main] c.e.u.UrlShortenerApplication            : Application started at 2024-03-29T15:16:35.274112
+2024-03-29T15:37:12.905+09:00  INFO 28960 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-03-29T15:37:12.914+09:00  INFO 28960 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-03-29T15:37:12.919+09:00  INFO 28960 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
