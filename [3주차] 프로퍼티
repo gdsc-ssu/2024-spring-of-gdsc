@@ -1,0 +1,488 @@
+## 2장 학습 내용
+
+<aside>
+✅ 애플리케이션 설정 관리, 커스텀 설정 정보 생성과 같은 핵심 개념
+다양한 공통 작업 처리 방법
+
+</aside>
+
+## 2.1 애플리케이션 설정 관리
+
+`배포할 환경이 달라지면 설정 정보는 달라지지만, 애플리케이션 소스 코드는 거의 달라지지 않는다.`
+
+스프링 부트는 `프로퍼티 파일, yaml 파일, 환경 변수, 명령행 인자` 등 여러 가지 방법으로 설정 정보를 외부화해서 소스 코드 변경 없이 환경마다 다르게 적용
+
+**스프링 부트에서 애플리케이션 설정 정보를 지정하는 다양한 방법에 대해 살펴본다.**
+
+## 2.1.1 SpringApplication 클래스 사용
+
+https://github.com/spring-boot-in-practice/repo/tree/main/ch02/spring-application : 소스 코드
+
+### **SpringApplication 클래스 :** 애플리케이션 설정 정보를 정의할 수 있다.
+
+- 설정 정보를 Properties나 Map<String, Object>에 넣어서 setDefaultProperties() 메서드를 호출 시 설정 정보가 애플리케이션에 적용된다.
+- 상황에 따라서 클래스파일에 설정 파일이 없을 때 예외를 던지는 등의 행위를 추가할 수 있다.
+
+## 2.1.2 @PropertySource 사용
+
+### 프로퍼티 파일의 위치를 @PropertySource 애너테이션을 사용해서 지정할 수 있다.
+
+예) `@PropertySource("classpath:dbConfig-properties")` 스프링 환경 설정 클래스에 지정
+
+→ 그 뒤, src/main/resources 디렉터리에 있는 파일은 실행가능한 JAR로 패키징된 후 클래스패스에 위치하게 되므로 이 디렉터리에 dbConfig.properties 파일을 작성
+
+- 스프링이 제공하는 환경 인스턴스 주입 후 [dbConfig.properties](http://dbConfig.properties) 파일에 지정된 설정 정보를 읽을 수 있다.
+
+```java
+DbConfiguration dbConfiguration = applicationContext.getBean(DbConfiguration.class);
+log.info(dbConfiguration.toString());
+```
+
+- 자바 8 이후로는 동일한 애너테이션을 여러 번 사용할 수 있으므로, 여러 프로퍼티 파일을 지정 후 사용 가능
+
+## 2.1.3 환경 설정 파일
+
+### `application.properties` //이니셜라이저로 생성시 기본적으로 함께 생성
+
+**key = value 형식**
+
+```
+server.port = 8081
+spring.datasource.username=sebin
+spring.datasource.password=hwangoni
+```
+
+### `application.yml` //주로 사용 (YAML 문법 익숙 시)
+
+**들여쓰기 “매우” 중요**
+
+```
+server:
+	port:8081
+spring :
+	datasource:
+		user: sebin
+		password: hwangoni
+```
+
+1. 파일에 명시된 설정 프로퍼티 정보는 스프링의 Environment 객체에 로딩
+2. 애플리케이션 클래스에서 Environment 인스턴스에 접근해서 설정 정보 읽기 가능
+3. @Value 애너테이션을 통해 접근 가능
+
+### **스프링 부트가 읽는 application.properties / application.yml 파일 위치**
+
+1. 클래스패스 루트
+2. 클래스패스 /config 패키지
+3. 현재 디렉터리
+4. 현재 디렉터리 /config 디렉터리
+5. /config 디렉터리의 바로 하위 디렉터리
+
+### **spring.config.loaction 프로퍼티**
+
+- 사용 시 다른 위치에 있는 설정 파일 읽기 가능
+- 상대 경로, 절대 경로 명시 가능
+
+**번외) 설정 파일이 없을 시 애플리케이션 실행하기**
+
+spring.config.location 프로퍼티값 앞에 `optional` 접두어 붙어주기
+
+```
+java -jar target/config-data-file-0.0.1-SNAPSHOT.jar --spring.config.location=optional:data
+/sbip1.yml
+```
+
+### 명령행 인자
+
+스프링 부트 애플리케이션을 JAR 파일로 만든 후에 애플리케이션 실행 시 명령행 인자로 설정 정보를 지정 가능
+
+### 프로파일(profile)별 설정 정보
+
+- 프로파일별로 프로퍼티 파일을 다르게 지정해서 사용 가능
+- 애플리케이션 설정의 일부를 분리해서 환경별로 다르게 적용
+
+ex) `application- dev.properties, application-test.properties`
+
+**설정 파일 로딩 순서**
+
+1. 애플리케이션 JAR 파일 **안에** 패키징 되는 **application.properties( 또는yml)** 파일
+2. 애플리케이션 JAR 파일 **안에** 패키징 되는 **application-{profile}.properties(또는yml)**파일
+3. 애플리케이션 JAR 파일 **밖에서** 패키징 되는 **application.properties( 또는yml)** 파일
+4. 애플리케이션 JAR 파일 **밖에서** 패키징 되는 **application-{profile}.properties(또는yml)**파일
+
+## 2.1.4 운영 체제 환경 변수
+
+<aside>
+✔️ 운영 체제 환경 변수로 지정한 값도 설정 정보 파일에서 읽어서 사용할 수 있다.
+
+</aside>
+
+```
+app.timeout =${APP _TIMEOUT}
+```
+
+**윈도우**
+
+```
+set <VAR>=<value>
+```
+
+**리눅스**
+
+```
+export <VAR>=<value>
+```
+
+⚠️이 방식으로 지정한 환경 변수는 해당 명령행 터미널 세션에서만 유효
+
+**아래 로그를  통해 확인할 수 있다.**
+
+```java
+log. info("Configured application timeout value: " + env.getProperty ("app. timeout"));
+```
+
+기본 설정 값을 application.properties 파일에 작성하는 것이 스프링 부트의 공통관례
+
+→ 필요하다면 환경 변수로부터 읽은 값으로 덮어쓸 수 있다.
+
+### 동일한 프로퍼티가 여러 곳에 존재할 때의 우선순위
+
+1. SpringAppilcation
+2. @PropertySource
+3. 설정정보파일(application.properties)
+4. 운영체제환경변수
+5. 명령행인자 (가장 높은 우선순위)
+
+### 2.1절 정리 : 스프링 부트 애플리케이션에서 설정 정보를 지정하는 방법
+
+- 빌트인 프로퍼티 (스프링 부트에서 제공)
+    - 다양한 기능에 대한 굉장히 많은 빌트인 프로퍼티 제공
+    - HTTP 포트 지정 : server.port
+- 커스텀 프로퍼티
+
+## 2.2 @ConfigurationProperties로 커스텀 프로퍼티 만들기
+
+`커스텀 프로퍼티 만들고 사용하는 방법`
+
+→ 필요한 만큼 얼마든지 만들어 사용할 수 있으며, 커스텀 프로퍼티가 런타임에 로딩되는 것을 스프링 부트가 보장
+
+2.1절에서는 프로퍼티는 스프링의 Environment 인스턴스에 바인딩 되고, Environment 인스턴스를 주입받으면 프로퍼티값 읽고 사용
+
+→ 단점 존재
+
+- 프로퍼티 값의 타입 안전성( type-safety)이 보장되지 않으며 이로 인해 런타임 에러가 발생 할 수 있다. 예를 들어 URL이나 이메일 주소를 프로퍼티로 사용할 때 유효성 검증(validation)을 수행할 수 없다.
+- 프로퍼티 값을 일정한 단위로 묶어서 읽을 수 없고, @Value 애너테이션이나 스프링의 Environment 인스턴스를 사용해서 하나하나 개별적으로만 읽을 수 있다.
+
+⇒ 스프링 부트에서 프로퍼티의 타입 안정성을 보장하고 유효성을 검증하는 방법 사용
+
+## 2.2.1 기법: @ConfigurationProperties를 사용한 커스텀 프로퍼티 정의
+
+<aside>
+✔️ 요구사항 : 커스텀 프로퍼티에 대해 타입 안정성을 보장하고 값의 유효성을 검증해야 한다.
+**해법 : @Configuration** 
+→ 프로퍼티 정보를 담는 클래스를 만들어서 타입 안정성을 보장하고 유효성을 검증
+→ @Value 애너테이션이나 Environment 객체를 사용하지 않고도 프로퍼티값을 읽을 수 있다.
+
+</aside>
+
+**프로퍼티 정보를 담을 수 있는 클래스**
+
+```java
+package com.manning.sbip.choz.configurationproperties;
+import java.util.List;
+import org.springframework.boot.context. properties.ConfigurationProperties;
+import org.springframework.boot.context. properties.Constructorinding;
+
+@ConstructorBinding
+@ConfigurationProperties("app.sbip.ct"')
+public class ApProperties {
+//name, ip, port 프로퍼티 이름 정의 
+	private final String name;
+	private final String ip; 
+	private final int port;
+	//보안 관련 프로 퍼티 정적 클래스 Security
+	private final Security security;
+	
+	public String getName (){
+		return name;
+	}
+	
+	public String getIp() {
+		return ip;
+	}
+	
+	public int getPort() {
+		return port;
+	}
+	public Security getSecurity(){
+		return security;
+	}
+	
+	public AppProperties(String name, String ip, int port, Security security) {
+		this.name = name;
+		this.ip = ip;
+		this.port = port;
+		this.security = security;
+	}
+	
+	@Override
+	public String toString() {
+		return "Approperties{" +
+					"name='" + name + ' \ ' +
+					",ip='" +ip +'\'' +
+					", port='" + port + ' \'' +
+					", security=" + security +
+					'}';
+		}
+		
+	public static class Security {
+	
+		private boolean enabled; 
+		
+		private final String token;
+		
+		private final List<String> roles; 
+		
+		public Security(boolean enabled, String token, List<String> roles) {
+			this.enabled = enabled;
+			this.token = token;
+			this.roles = roles;
+		}
+		
+		public boolean isEnabled(){
+			return enabled;
+		}
+		
+		public String getToken(){
+			return token;
+		}
+		
+		public List<String> getRoles() {
+			return roles;
+		}
+		
+		@Override
+		public String toString(){
+				return "Security{" +
+								"enabled=" + enabled +
+								",token= '" +token +'\'' +
+								", roles=" + roles+
+								'}';
+								
+			}
+	}
+}
+```
+
+**프로퍼티 정보를 담을 수 있는 클래스를 사용해서 프로퍼티를 읽는 클래스 (AppService)**
+
+```java
+package com.manning.sbip.ch02;
+
+//import 문 생략
+@Service
+public class AppService {
+
+		private final Approperties approperties;
+		
+		@Autowired
+		public AppService(Approperties approperties) {
+			this.appProperties = appProperties;
+		}
+		
+		public AppProperties getAppProperties() {
+			return this.appProperties;
+		}
+}
+```
+
+스프링 부트가 application.properties에 있는 프로퍼티를 읽어서 유효성 검증을 수행하고 AppProperties객체에 프로퍼티값을 넣어준다.
+
+**서비스 클래스를 사용해서 AppProperties 객체에 접근하여 프로퍼티 값을 사용하는 스프링 부트 애플리케이션** 
+
+```java
+package com.manning.sbip.ch82;
+//import 문 생략
+@SpringBootApplication
+@EnableConfigurationProperties(Approperties.class) 
+//@ConfigurationProperties 애너테이션이 붙어있는 클래스를 스프링 컨테이너에 등록
+//단점 : @ConfigurationProperties 애너테이션이 붙어 있는 클래스를 자동 탐색해서 등록해주는 것이 아니라 직접 명시해줘야 한다.
+
+public class SpringbootAppDemoApplication {
+
+		private static final Logger log =
+			LoggerFactory.getLogger(SpringBootAppDemoApplication.class);
+			
+		public static void main (String[] args){
+			ConfigurablepplicationContext applicationContext =
+				SpringApplication.run(SpringBootAppDemoApplication.class, args);
+				
+			AppService appService=
+					applicationContext.getBean(AppService.class);
+					
+		log.info(appService. getAppProperties).toString);
+		}
+}
+```
+
+**@EnableConfigurationProperties 대신에 @ConfigurationPropertiesScan 애너테이션을 사용 시**
+
+→ 지정 패키지 하위에 있는 @ConfigurationProperties가 붙어 있는 클래스를 모두 탐색해서 스프링 컨테이너에 등록해준다.
+
+→ @Component 같은 애터네이션이 붙은 클래스가 아니라 @ConfigurationProperties가 붙어 있는 클래스만 탐색해서 등록
+
+### @ConfigurationProperties
+
+- 설정 정보를 외부화
+- 타임 안정성 확보
+- 구조화된 방식으로 구조화된 방식으로 관리
+- 클래스에 붙일 수 있다.
+- @Configuration 클래스안에서 빈을 생성하는 @Bean 메서드에도 붙일 수 있다.
+
+**프로퍼티 값을 클래스에 바인딩하는 작업**
+
+- 세터 메스드로 수행 가능
+- 생성자 바인딩 방식으로 수행 가능
+
+### @ConstructorBinding
+
+- POJO 클래스에 사용 시 생성자를 통해 프로퍼티 정보값이 설정
+- 클래스에 붙일 수 있다.
+- 생성자에 붙일 수 있다.
+- 생성자 바인딩 대신에 세터 메서드를 사용하는 세터 바인딩 방식으로 프로퍼티값을 설정 가능
+- 설정 정보 클래스에 불변성을 보장하기 위해 세터 메서드를 추가하지 말고 @ConstructorBinding 애너테이션 사용 → 프로퍼티값이 생성자를 통해 POJO 샛체에 설정된 후에 설정값이 변경될 수 없다.
+
+## 2.3 스프링 부트 애플리케이션 시작 시 코드 실행
+
+스프링 부트 애플리케이션을 시작할 때 **특정 코드를 실행**해야 할 때
+예)
+→ 애플리케이션 초기화가 완료되기 전에 데이터베이스 초기화 스크립트 실행
+→ 외부 REST 서비스를 호출해서 데이터 가져오기
+
+⇒ `CommandLineRunner`와 `ApplicationRunner` 인터페이스를 구현해서 빈으로 등록해두면 스프링 부트 애플리케이션 초기화 완료 직전에 run() 메서드가 실행된다.
+(두 인터페이스는 매우 유사하다)
+
+### 2.3.1 기법 : 스프링 부트 애플리케이션 시작 시 CommandLineRunner로 코드 실행
+
+<aside>
+✔️ **요구사항** : 스프링 부트 애플리케이션 시작 시 CommandLineRunner를 사용해서 애플리케이션 초기화 코드를 실행해야 한다.
+**해법 :** CommandLineRunner를 여러 가지 방법으로 사용
+
+- 스프링 부트 메인 클래스가 CommandLineRunner 인터페이스를 구현하게 만든다.
+- CommandLineRunner 구현체에 @Bean을 붙여서 빈으로 정의한다.
+- CommandLineRunner 구현체에 @Component를 붙여서 스프링 컴포넌트로 정의한다.
+</aside>
+
+### 1) 스프링 부트 메인 클래스가 CommandLineRunner 인터페이스를 구현
+
+CommandLineRunner 구현체를 한 개만 정의할 수 있고, 실행 순서를 지정할 수 없다는 점에서 제한적이다.
+
+```java
+package com.manning.sbip.ch02;
+//import문 생략
+
+@SpringBootApplication
+public class CourseTrackerApplication implements CommandLineRunner {
+
+	protected final Log logger = LogFactory getLog(getClass());
+	
+	public static void main(String[] args) {
+		SpringApplication.run(CourseTrackerApplication.class,args);
+	}
+	
+	@Override
+	public void run(String ... args) throws Exception { //run() 메서드를 구현해서 콘솔에 로그 출력
+			logger.info("CourseTrackerApplication CommandLineRunner has executed");
+	}
+```
+
+### 2) CommandLineRunner 구현체에 @Bean을 붙여서 빈으로 정의
+
+상황에 맞게 유연하게 사용할 수 있고 실행 순서도 지정 가능
+
+```java
+package com.manning.sbip.ch02;
+
+//import 문 생략
+
+@SpringBootApplication
+public class CourseTrackerApplication implements CommandLineRunner { 
+
+	protected final Logger logger= LoggerFactory.getLogger(getClass());
+	
+	public static void main(String[] args) {
+		SpringApplication.run(CourseTrackerApplication.class, args);
+		}
+		
+@Bean //애플리케이션이 시작되면 빈이 로딩되면서 콘솔에 로그를 출력
+//장점 : CommandLineRunner 인터페이스를 구현할 필요가 없다
+	public CommandLineRunner commandLineRunner(){
+		return args -> {
+					logger.info("CommandLineRunner executed as a bean definition with " + args.
+	length + " arguments");
+			for (int i= 0; i < args.length ; i++) {
+					logger.info("Argument: " + args[i]);
+				}
+			};
+		}
+	}
+```
+
+---
+
+ComandLineRunner 구현체를 스프링 부트 메인 클래스에 작성
+
+@Component 애너테이션이 붙어 있는 별도의 클래스에 작성 가능
+
+→ 스프링 부트 메인 클래스가 ComandLineRunner 관련 코드로 인해 복잡해지는 부작용을 막을 수 있다.
+
+---
+
+### @Bean과 @Component
+
+**공통점** : 스프링에 의해 빈으로 등록된다.
+
+**@Bean** : 빈으로 등록하고자 하는 클래스의 소스 코드에 직접 접근할 수 없을 때는 해당 클래스의 인스턴스를 반환하는 메서드를 작성하고 @Bean 애너테이션을 붙여서 빈으로 등록
+
+**@Component** : 빈으로 등록하고자 하는 클래스의 소스 코드에 직접 접근할 수 있을 때는 @Component 애너테이션을 붙이면 빈으로 등록
+
+---
+
+### 3) CommandLineRunner 구현체에 @Component를 붙여서 스프링 컴포넌트로 정의
+
+상황에 맞게 유연하게 사용할 수 있고 실행 순서도 지정 가능
+
+CommandLineRunner 구현체를 별도의 클래스로 작성할 수 있어 더 나은 코드를 작성 가능
+
+```java
+package com.manning.sbip.chez.commandline;
+// import 문 생략
+
+@Order (1) // 컴포넌트의 순서 정의 지정 숫자가 낮을 수록 우선순위가 높다.
+@Component
+public class MyCommandLineRunner implements CommandLineRunner {
+
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Override
+	public void run(String...args) throws Exception {
+		logger. info("MyCommandLineRunner executed as a Spring Component");
+		}
+}
+//애플리케이션을 실행하면 스프링 부트 컴포넌트 탐색 기능을 통해 
+//MyCommadLineRunner 컴포넌트 클래스의 인스턴스가 생성되고 빈으로 등록되며 로그가 콘솔에 표시
+```
+
+**CommandLineRunner** 구현체는 여러 개를 등록할 수 있으며 **@Order** 애너테이션으로 실행 순서를 정한다.
+
+### CommandLineRunner
+
+- 애플리케이션 초기화를 위해 여러 작업을 수행해야 할 때 편리하게 사용
+- args 파라미터에 접근 가능
+    
+    → 외부에서 파라미터값을 다르게 지정하면서 원하는 대로  CommandLineRunner 구현체 제어 가능
+    
+- 스프링의 의존 관계 주입으로 빈을 주입받아 사용할 수 있다.
+    
+    → CommandLineRunner 구현체는 스프링 부트 애플리케이션이 빈 등록을 포함한 초기화 과정 수행을 거의 다 마친 뒤에 실행
+    
+    → 어떤 빈이든 주입받아 사용 가능
