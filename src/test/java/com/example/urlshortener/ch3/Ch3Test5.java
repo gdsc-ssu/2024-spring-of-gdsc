@@ -19,7 +19,7 @@ class Ch3Test5 {
 
     @Test
     public void givenShortenedUrlsWhenLoadShortenedUrlsWithQueryThenExpectCorrectShortenedUrlsDetails() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
+        ShortenedUrl shortenedUrl = new ShortenedUrl("abc", "http://example.com/page1", LocalDateTime.now());
         ShortenedUrl savedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
 
         assertThat(shortenedUrlRepository.findByShortUrlWithQuery(savedShortenedUrl.getShortUrl()).get().getOriginUrl()).isEqualTo("http://example.com/page1");
