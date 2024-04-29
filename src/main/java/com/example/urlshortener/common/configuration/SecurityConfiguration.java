@@ -23,6 +23,11 @@ public class SecurityConfiguration {
                     XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)
                 )
             );
+        // Chapter 6.1 모든 요청에 HTTPS 적용하기
+        http
+            .requiresChannel(
+                requiresChannel -> requiresChannel.anyRequest().requiresSecure()
+            );
         http
             .authorizeHttpRequests(
                 authorize -> authorize
