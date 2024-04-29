@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,15 +36,25 @@ public class UrlService {
 
     public ShortenedUrlDto getShortUrl(String shortId) {
         ShortenedUrl shortenedUrl = shortenedUrlRepository.findByShortUrl(shortId)
-            .orElseThrow(UrlNotFoundException::new);
+                .orElseThrow(UrlNotFoundException::new);
 
         return new ShortenedUrlDto(shortenedUrl.getId(), shortenedUrl.getShortUrl(), shortenedUrl.getOriginUrl(), shortenedUrl.getCreatedAt());
     }
 
     public String getOriginUrl(String shortId) {
         ShortenedUrl shortenedUrl = shortenedUrlRepository.findByShortUrl(shortId)
-            .orElseThrow(UrlNotFoundException::new);
+                .orElseThrow(UrlNotFoundException::new);
 
         return shortenedUrl.getOriginUrl();
+    }
+
+    public List<ShortenedUrlDto> getShortUrlsContainingStringQueryDsl(String inquiry) {
+        List<ShortenedUrl> shortUrls = shortenedUrlRepository.findByOriginUrlContaining(inquiry);
+        return shortUrls.stream().map(ShortenedUrlDto::from).collect(Collectors.toList());
+    }
+
+    public List<ShortenedUrlDto> getShortUrlsContainingStringJpa(String inquiry) {
+        List<ShortenedUrl> shortUrls = shortenedUrlRepository.findByOriginUrlContaining(inquiry);
+        return shortUrls.stream().map(ShortenedUrlDto::from).collect(Collectors.toList());
     }
 }
