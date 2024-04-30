@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,6 +28,9 @@ public class ShortenedUrl {
     @NotBlank
     @Column(name = "origin_url", length = 2048, nullable = false)
     private String originUrl;
+
+    @OneToMany(mappedBy = "shortenedUrl", fetch = FetchType.LAZY)
+    private Set<UrlClick> urlClicks = new HashSet<>();
 
     // TODO: BaseEntity로 설정하기
     @Column(name = "created_at", nullable = false)
