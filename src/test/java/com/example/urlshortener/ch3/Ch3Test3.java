@@ -19,7 +19,7 @@ class Ch3Test3 {
 
     @Test
     public void givenCreateShortenedUrlWhenLoadTheShortenedUrlThenExpectSameShortenedUrl() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
+        ShortenedUrl shortenedUrl = new ShortenedUrl("abc", "http://example.com/page1", LocalDateTime.now());
         ShortenedUrl savedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
 
         // TODO: 실제로는 이렇게 사용하면 안됨 with Transactional
@@ -28,7 +28,7 @@ class Ch3Test3 {
 
     @Test
     public void givenUpdateShortenedUrlWhenLoadTheShortenedUrlThenExpectUpdatedShortenedUrl() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
+        ShortenedUrl shortenedUrl = new ShortenedUrl("abc", "http://example.com/page1", LocalDateTime.now());
         shortenedUrlRepository.save(shortenedUrl);
 
         shortenedUrl.setOriginUrl("http://example.com/page2");
@@ -40,7 +40,7 @@ class Ch3Test3 {
 
     @Test
     public void givenDeleteShortenedUrlWhenLoadTheShortenedUrlThenExpectNoShortenedUrl() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
+        ShortenedUrl shortenedUrl = new ShortenedUrl("abc", "http://example.com/page1", LocalDateTime.now());
         ShortenedUrl savedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
 
         assertThat(shortenedUrlRepository.findById(savedShortenedUrl.getId()).get().getId()).isEqualTo(savedShortenedUrl.getId());
