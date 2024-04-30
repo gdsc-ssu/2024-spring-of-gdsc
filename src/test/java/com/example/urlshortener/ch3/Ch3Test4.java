@@ -24,7 +24,7 @@ class Ch3Test4 {
 
     @Test
     public void givenCreateShortenedUrlWhenLoadTheShortenedUrlThenExpectSameShortenedUrl() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.now());
+        ShortenedUrl shortenedUrl = new ShortenedUrl("abc", "http://example.com/page1", LocalDateTime.now());
         ShortenedUrl savedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
 
         assertThat(shortenedUrlRepository.findByOriginUrl(savedShortenedUrl.getOriginUrl()).get().getId()).isEqualTo(savedShortenedUrl.getId());
@@ -41,7 +41,7 @@ class Ch3Test4 {
         Condition<ShortenedUrl> sortedFirstCourseCondition = new Condition<ShortenedUrl>() {
             @Override
             public boolean matches(ShortenedUrl shortenedUrl) {
-                return shortenedUrl.getId() == 5L && shortenedUrl.getShortUrl().equals("http://short.url/mno");
+                return shortenedUrl.getId() == 5L && shortenedUrl.getShortUrl().equals("mno");
             }
         };
 
@@ -51,11 +51,11 @@ class Ch3Test4 {
 
     private void saveMockedShortenedUrls() {
         List<ShortenedUrl> shortenedUrls = List.of(
-                new ShortenedUrl("http://short.url/abc", "http://example.com/page1", LocalDateTime.parse("2024-04-01T10:00:00")),
-                new ShortenedUrl("http://short.url/def", "http://example.com/page2", LocalDateTime.parse("2024-04-02T12:00:00")),
-                new ShortenedUrl("http://short.url/ghi", "http://example.com/page3", LocalDateTime.parse("2024-04-03T14:00:00")),
-                new ShortenedUrl("http://short.url/jkl", "http://example.com/page4", LocalDateTime.parse("2024-04-04T16:00:00")),
-                new ShortenedUrl("http://short.url/mno", "http://example.com/page5", LocalDateTime.parse("2024-04-05T18:00:00"))
+                new ShortenedUrl("abc", "http://example.com/page1", LocalDateTime.parse("2024-04-01T10:00:00")),
+                new ShortenedUrl("def", "http://example.com/page2", LocalDateTime.parse("2024-04-02T12:00:00")),
+                new ShortenedUrl("ghi", "http://example.com/page3", LocalDateTime.parse("2024-04-03T14:00:00")),
+                new ShortenedUrl("jkl", "http://example.com/page4", LocalDateTime.parse("2024-04-04T16:00:00")),
+                new ShortenedUrl("mno", "http://example.com/page5", LocalDateTime.parse("2024-04-05T18:00:00"))
         );
 
         shortenedUrlRepository.saveAll(shortenedUrls);
