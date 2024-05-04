@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
@@ -19,10 +21,16 @@ public class ShortenedUrlDto {
 
     public static ShortenedUrlDto from(ShortenedUrl shortenedUrl) {
         return ShortenedUrlDto.builder()
-            .id(shortenedUrl.getId())
-            .shortUrl(shortenedUrl.getShortUrl())
-            .originUrl(shortenedUrl.getOriginUrl())
-            .createdAt(shortenedUrl.getCreatedAt())
-            .build();
+                .id(shortenedUrl.getId())
+                .shortUrl(shortenedUrl.getShortUrl())
+                .originUrl(shortenedUrl.getOriginUrl())
+                .createdAt(shortenedUrl.getCreatedAt())
+                .build();
+    }
+
+    public static List<ShortenedUrlDto> from(List<ShortenedUrl> shortenedUrls) {
+        return shortenedUrls.stream()
+                .map(ShortenedUrlDto::from)
+                .collect(Collectors.toList());
     }
 }
