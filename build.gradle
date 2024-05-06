@@ -56,6 +56,9 @@ dependencies {
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // 부트 스트랩 추가
+    implementation 'org.webjars:bootstrap:4.5.3'
 }
 
 // 테스트 의존성 라이브러리
@@ -73,7 +76,7 @@ querydsl {
 sourceSets {
     main.java.srcDir querydslDir
 }
-compileQuerydsl{
+compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
 configurations {
