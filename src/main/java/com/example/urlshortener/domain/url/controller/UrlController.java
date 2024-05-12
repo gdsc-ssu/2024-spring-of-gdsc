@@ -2,6 +2,7 @@ package com.example.urlshortener.domain.url.controller;
 
 import com.example.urlshortener.common.dto.Response;
 import com.example.urlshortener.domain.url.controller.request.CreateShortUrlRequest;
+import com.example.urlshortener.domain.url.controller.request.UpdateUrlRequest;
 import com.example.urlshortener.domain.url.controller.response.ShortUrlResponse;
 import com.example.urlshortener.domain.url.dto.ShortenedUrlDto;
 import com.example.urlshortener.domain.url.service.UrlService;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -92,5 +94,19 @@ public class UrlController {
         List<ShortenedUrlDto> shortenedUrls = urlService.getAllShortUrlContainingInquiryByQueryDSL(inquiry);
 
         return Response.data(shortenedUrls);
+    }
+
+    @Operation(
+            summary = "Origin URL 수정하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "URL_NOT_FOUND"),
+                    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+            }
+    )
+    @PatchMapping("/{short_id}")
+    public Response<ShortUrlResponse> updateOriginUrl(@NotNull @PathVariable("short_id") Long id, @RequestBody UpdateUrlRequest request) {
+        ShortenedUrlDto shortenedUrl = urlService.updateOriginUrl(id, request);
+        return Response.data(ShortUrlResponse.from(shortenedUrl));
     }
 }

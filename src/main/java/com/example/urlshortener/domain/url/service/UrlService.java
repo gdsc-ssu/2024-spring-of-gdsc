@@ -1,6 +1,7 @@
 package com.example.urlshortener.domain.url.service;
 
 import com.example.urlshortener.common.utils.RandomStringUtil;
+import com.example.urlshortener.domain.url.controller.request.UpdateUrlRequest;
 import com.example.urlshortener.domain.url.dto.ShortenedUrlDto;
 import com.example.urlshortener.domain.url.entity.ShortenedUrl;
 import com.example.urlshortener.domain.url.exception.UrlNotFoundException;
@@ -60,5 +61,20 @@ public class UrlService {
                 .stream().map(ShortenedUrlDto::from).collect(Collectors.toList());
 
         return shortenedUrls;
+    }
+
+    public ShortenedUrlDto updateOriginUrl(Long id, UpdateUrlRequest request) {
+        ShortenedUrl url = shortenedUrlRepository.findById(id)
+                .orElseThrow(UrlNotFoundException::new);
+
+        // originUrl에 바뀌었으니 shortUrl도 새롭게 만들어줌
+        String newShortUrl = RandomStringUtil.generateRandomString(8);
+
+        url.setOriginUrl(request.getNewOriginUrl());
+        url.setShortUrl(newShortUrl);
+
+        shortenedUrlRepository.save(url);
+
+        return ShortenedUrlDto.from(url);
     }
 }
