@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/short-links")
@@ -23,11 +25,11 @@ public class UrlController {
     private final UrlService urlService;
 
     @Operation(
-        summary = "URL 단축하기",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
-        }
+            summary = "URL 단축하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+            }
     )
     @PostMapping
     public Response<ShortUrlResponse> createShortUrl(@Valid @RequestBody CreateShortUrlRequest request) {
@@ -36,12 +38,12 @@ public class UrlController {
     }
 
     @Operation(
-        summary = "단축 URL 조회하기",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "404", description = "URL_NOT_FOUND"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
-        }
+            summary = "단축 URL 조회하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "URL_NOT_FOUND"),
+                    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+            }
     )
     @GetMapping("/{short_id}")
     public Response<ShortUrlResponse> getShortUrl(@NotBlank @PathVariable("short_id") String shortId) {
@@ -50,11 +52,11 @@ public class UrlController {
     }
 
     @Operation(
-        summary = "Short URL 리디렉션",
-        responses = {
-            @ApiResponse(responseCode = "302", description = "FOUND"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
-        }
+            summary = "Short URL 리디렉션",
+            responses = {
+                    @ApiResponse(responseCode = "302", description = "FOUND"),
+                    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+            }
     )
     @GetMapping("/r/{short_id}")
     public RedirectView redirectShortUrl(@NotBlank @PathVariable("short_id") String shortId) {
@@ -62,5 +64,33 @@ public class UrlController {
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(originUrl);
         return redirectView;
+    }
+
+    @Operation(
+            summary = "Data JPA로 URL 조회하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+            }
+    )
+    @GetMapping("/list/jpa")
+    public Response<List<ShortenedUrlDto>> getAllShortUrlContainingInquiryByJPA(@NotBlank @RequestParam("inquiry") String inquiry) {
+        List<ShortenedUrlDto> shortenedUrls = urlService.getAllShortUrlContainingInquiryByJPA(inquiry);
+
+        return Response.data(shortenedUrls);
+    }
+
+    @Operation(
+            summary = "QueryDSL로 URL 조회하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+            }
+    )
+    @GetMapping("/list/query-dsl")
+    public Response<List<ShortenedUrlDto>> getAllShortUrlContainingInquiryByQueryDSL(@NotBlank @RequestParam("inquiry") String inquiry) {
+        List<ShortenedUrlDto> shortenedUrls = urlService.getAllShortUrlContainingInquiryByQueryDSL(inquiry);
+
+        return Response.data(shortenedUrls);
     }
 }
