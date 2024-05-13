@@ -17,7 +17,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create        # (none, create, create-drop, update, validate)
+      ddl-auto: none        # (none, create, create-drop, update, validate)
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect    # Dialect: 데이터베이스에 대한 특정 SQL 문법과 데이터 타입 매핑에 대한 규칙을 제공
@@ -25,11 +25,11 @@ spring:
         show_sql: true        # SQL 쿼리를 출력할지 여부 설정
 
   # TODO: 발표 후 ddl-auto: create 로 변경하기(보통 ddl-auto로 사용함)
-#  sql:
-#    init:
-#      mode: always  # ddl-auto: none, H2는 필요없음(어차피 사라지기 때문)
-#      schema-locations: classpath:db-init-scripts/schema.sql
-#      data-locations: classpath:db-init-scripts/data.sql
+  sql:
+    init:
+      mode: always  # ddl-auto: none, H2는 필요없음(어차피 사라지기 때문)
+      schema-locations: classpath:db-init-scripts/schema.sql
+      data-locations: classpath:db-init-scripts/data.sql
 
 #logging:
 #  pattern:
