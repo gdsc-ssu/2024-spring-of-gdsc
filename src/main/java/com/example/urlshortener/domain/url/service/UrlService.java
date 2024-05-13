@@ -4,17 +4,20 @@ import com.example.urlshortener.common.utils.RandomStringUtil;
 import com.example.urlshortener.domain.url.dto.ShortenedUrlDto;
 import com.example.urlshortener.domain.url.entity.ShortenedUrl;
 import com.example.urlshortener.domain.url.exception.UrlNotFoundException;
+import com.example.urlshortener.domain.url.repository.ShortenedUrlQueryRepository;
 import com.example.urlshortener.domain.url.repository.ShortenedUrlRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UrlService {
     private final ShortenedUrlRepository shortenedUrlRepository;
+    private final ShortenedUrlQueryRepository shortenedUrlQueryRepository;
 
     @Transactional
     public ShortenedUrlDto createShortUrl(String url) {
@@ -34,15 +37,47 @@ public class UrlService {
 
     public ShortenedUrlDto getShortUrl(String shortId) {
         ShortenedUrl shortenedUrl = shortenedUrlRepository.findByShortUrl(shortId)
-            .orElseThrow(UrlNotFoundException::new);
+                .orElseThrow(UrlNotFoundException::new);
 
         return new ShortenedUrlDto(shortenedUrl.getId(), shortenedUrl.getShortUrl(), shortenedUrl.getOriginUrl(), shortenedUrl.getCreatedAt());
     }
 
     public String getOriginUrl(String shortId) {
         ShortenedUrl shortenedUrl = shortenedUrlRepository.findByShortUrl(shortId)
-            .orElseThrow(UrlNotFoundException::new);
+                .orElseThrow(UrlNotFoundException::new);
 
         return shortenedUrl.getOriginUrl();
+    }
+
+    public List<ShortenedUrlDto> getShortUrlsWithJpa(String inquiry) {
+        List<ShortenedUrl> shortenedUrls = shortenedUrlRepository.findAllByOriginUrlContains(inquiry);
+
+        return ShortenedUrlDto.from(shortenedUrls);
+    }
+
+    public List<ShortenedUrlDto> getShortUrlsWithQueryDsl(String inquiry) {
+        return shortenedUrlQueryRepository.getShortUrlsWithQueryDsl(inquiry);
+    }
+
+    public ShortenedUrlDto getShortUrlById(Long id) {
+        ShortenedUrl shortenedUrl = shortenedUrlRepository.findById(id)
+                .orElseThrow(UrlNotFoundException::new);
+
+        return new ShortenedUrlDto(shortenedUrl.getId(), shortenedUrl.getShortUrl(), shortenedUrl.getOriginUrl(), shortenedUrl.getCreatedAt());
+    }
+
+    public void deleteShortUrl(Long id) {
+        ShortenedUrl shortenedUrl = shortenedUrlRepository.findById(id)
+                .orElseThrow(UrlNotFoundException::new);
+
+        shortenedUrlRepository.delete(shortenedUrl);
+    }
+
+    public ShortenedUrlDto updateShortUrl(Long id) {
+        ShortenedUrl shortenedUrl = shortenedUrlRepository.findById(id)
+                .orElseThrow(UrlNotFoundException::new);
+        shortenedUrl.setCreatedAt(LocalDateTime.now());
+        ShortenedUrl updatedShortenedUrl = shortenedUrlRepository.save(shortenedUrl);
+        return new ShortenedUrlDto(updatedShortenedUrl.getId(), updatedShortenedUrl.getShortUrl(), updatedShortenedUrl.getOriginUrl(), updatedShortenedUrl.getCreatedAt());
     }
 }
