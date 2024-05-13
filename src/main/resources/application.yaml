@@ -15,6 +15,7 @@ spring:
 
   # JPA
   jpa:
+    defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create        # (none, create, create-drop, update, validate)
@@ -25,11 +26,11 @@ spring:
         show_sql: true        # SQL 쿼리를 출력할지 여부 설정
 
   # TODO: 발표 후 ddl-auto: create 로 변경하기(보통 ddl-auto로 사용함)
-#  sql:
-#    init:
-#      mode: always  # ddl-auto: none, H2는 필요없음(어차피 사라지기 때문)
+  sql:
+    init:
+      mode: always  # ddl-auto: none, H2는 필요없음(어차피 사라지기 때문)
 #      schema-locations: classpath:db-init-scripts/schema.sql
-#      data-locations: classpath:db-init-scripts/data.sql
+      data-locations: classpath:db-init-scripts/data.sql
 
 #logging:
 #  pattern:
