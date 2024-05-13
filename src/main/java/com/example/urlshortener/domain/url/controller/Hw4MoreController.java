@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/short-links")
-@Tag(name = "🖥🌿 4주차 추가 과제", description = "4주차 추가 과제입니다.")
+@Tag(name = "🖥🌿 4주차 추가 과제", description = "id를 사용한 4주차 추가 과제입니다.")
 public class Hw4MoreController {
     private final UrlService urlService;
 

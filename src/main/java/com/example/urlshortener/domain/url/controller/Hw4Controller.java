@@ -20,7 +20,6 @@ import java.util.List;
 @RequestMapping("/short-links/list")
 @Tag(name = "🖥🌿 4주차 과제", description = "4주차 과제입니다.")
 public class Hw4Controller {
-
     private final UrlService urlService;
 
     @Operation(
@@ -48,5 +47,4 @@ public class Hw4Controller {
         List<ShortenedUrlDto> shortenedUrls = urlService.getShortUrlsWithJpa(inquiry);
         return Response.data(shortenedUrls);
     }
-
 }
