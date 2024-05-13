@@ -23,11 +23,11 @@ public class UrlController {
     private final UrlService urlService;
 
     @Operation(
-            summary = "URL 단축하기",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "OK"),
-                    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
-            }
+        summary = "URL 단축하기",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+        }
     )
     @PostMapping
     public Response<ShortUrlResponse> createShortUrl(@Valid @RequestBody CreateShortUrlRequest request) {
@@ -36,12 +36,12 @@ public class UrlController {
     }
 
     @Operation(
-            summary = "단축 URL 조회하기",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "OK"),
-                    @ApiResponse(responseCode = "404", description = "URL_NOT_FOUND"),
-                    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
-            }
+        summary = "단축 URL 조회하기",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "URL_NOT_FOUND"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+        }
     )
     @GetMapping("/{short_id}")
     public Response<ShortUrlResponse> getShortUrl(@NotBlank @PathVariable("short_id") String shortId) {
@@ -50,11 +50,11 @@ public class UrlController {
     }
 
     @Operation(
-            summary = "Short URL 리디렉션",
-            responses = {
-                    @ApiResponse(responseCode = "302", description = "FOUND"),
-                    @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
-            }
+        summary = "Short URL 리디렉션",
+        responses = {
+            @ApiResponse(responseCode = "302", description = "FOUND"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+        }
     )
     @GetMapping("/r/{short_id}")
     public RedirectView redirectShortUrl(@NotBlank @PathVariable("short_id") String shortId) {
