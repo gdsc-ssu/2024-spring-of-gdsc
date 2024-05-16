@@ -2,9 +2,11 @@ package com.example.urlshortener.domain.url.service;
 
 import com.example.urlshortener.common.utils.RandomStringUtil;
 import com.example.urlshortener.domain.url.dto.ShortenedUrlDto;
+import com.example.urlshortener.domain.url.entity.QShortenedUrl;
 import com.example.urlshortener.domain.url.entity.ShortenedUrl;
 import com.example.urlshortener.domain.url.exception.UrlNotFoundException;
 import com.example.urlshortener.domain.url.repository.ShortenedUrlRepository;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UrlService {
     private final ShortenedUrlRepository shortenedUrlRepository;
+    private final JPAQueryFactory queryFactory;
 
     @Transactional
     public ShortenedUrlDto createShortUrl(String url) {
@@ -49,7 +52,13 @@ public class UrlService {
     }
 
     public List<ShortenedUrlDto> getShortUrlsContainingStringQueryDsl(String inquiry) {
-        List<ShortenedUrl> shortUrls = shortenedUrlRepository.findByOriginUrlContaining(inquiry);
+        QShortenedUrl qShortenedUrl = QShortenedUrl.shortenedUrl;
+
+        List<ShortenedUrl> shortUrls = queryFactory
+                .selectFrom(qShortenedUrl)
+                .where(qShortenedUrl.originUrl.containsIgnoreCase(inquiry))
+                .fetch();
+
         return shortUrls.stream().map(ShortenedUrlDto::from).collect(Collectors.toList());
     }
 

@@ -49,6 +49,11 @@ dependencies {
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // QueryDSL 의존성 추가
+    implementation 'com.querydsl:querydsl-jpa'
+    annotationProcessor 'com.querydsl:querydsl-apt'
+    annotationProcessor 'javax.persistence:javax.persistence-api'
 }
 
 // 테스트 의존성 라이브러리
@@ -66,7 +71,7 @@ querydsl {
 sourceSets {
     main.java.srcDir querydslDir
 }
-compileQuerydsl{
+compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
 configurations {
