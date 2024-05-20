@@ -3,6 +3,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 // 프로젝트의 그룹(도메인) 및 버전
@@ -38,9 +39,42 @@ dependencies {
 
     // Database
     implementation 'com.h2database:h2'
+
+    // Querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+//    implementation 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
 }
 
 // 테스트 의존성 라이브러리
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+
+// Querydsl 설정
+def querydslDir = "build/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets {
+    main.java.srcDir querydslDir
+}
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+
+// gradle clean 시에 QClass 디렉토리 삭제
+clean {
+    delete file(querydslDir)
 }

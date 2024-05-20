@@ -23,10 +23,10 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect    # Dialect: 데이터베이스에 대한 특정 SQL 문법과 데이터 타입 매핑에 대한 규칙을 제공
         format_sql: true      # SQL 쿼리를 포맷팅하여 출력할지 여부 설정
         show_sql: true        # SQL 쿼리를 출력할지 여부 설정
-    spring.jpa.defer-datasource-initialization: true
+    defer-datasource-initialization: true
 
   sql:
     init:
       mode: always  # ddl-auto: none, H2는 필요없음(어차피 사라지기 때문)
-      #      schema-locations: classpath:db-init-scripts/schema.sql
-      data-locations: classpath:db-init-scripts/data.sql
+      schema-locations: classpath:db-init-scripts/schema.sql
+      data-locations: classpath:db-init-scripts/import.sql
