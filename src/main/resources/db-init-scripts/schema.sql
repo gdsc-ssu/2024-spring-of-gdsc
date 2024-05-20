@@ -1,0 +1,15 @@
+CREATE TABLE shortened_url (
+   id BIGINT AUTO_INCREMENT PRIMARY KEY,
+   short_url VARCHAR(2048) NOT NULL,
+   origin_url VARCHAR(2048) NOT NULL,
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE TABLE url_click (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    shortened_url_id BIGINT NOT NULL,
+    clicks BIGINT DEFAULT 0 NOT NULL,
+    click_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (shortened_url_id) REFERENCES shortened_url(id)
+);
