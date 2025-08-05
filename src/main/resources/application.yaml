@@ -2,10 +2,14 @@ spring:
   # H2 Database ??
   datasource:
     driver-class-name: org.h2.Driver
+#    driver-class-name: org.postgresql.Driver
     url: 'jdbc:h2:mem:test'     # H2 DB (In-Memory Mode)
-    # url: 'jdbc:h2:~/test'     # H2 DB (Embedded Mode)
+#     url: 'jdbc:h2:~/test'     # H2 DB (Embedded Mode)
     username: root              # H2 DB ID
     password: 1234              # H2 DB PW
+#    username: ${DB_USERNAME}
+#    password: ${DB_PASSWORD}
+#    url: ${DB_URI}
 
   # H2 Console
   h2:
@@ -20,6 +24,7 @@ spring:
       ddl-auto: none        # (none, create, create-drop, update, validate)
     properties:
       hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
         dialect: org.hibernate.dialect.H2Dialect    # Dialect: 데이터베이스에 대한 특정 SQL 문법과 데이터 타입 매핑에 대한 규칙을 제공
         format_sql: true      # SQL 쿼리를 포맷팅하여 출력할지 여부 설정
         show_sql: true        # SQL 쿼리를 출력할지 여부 설정
@@ -45,3 +50,4 @@ spring:
 server:
   # 서버 안전하게 종료하기
   shutdown: graceful
+  port: 5000
